@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssql
+  labels:
+    app: mssql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql
+  template:
+    metadata:
+      labels:
+        app: mssql
+    spec:
+      containers:
+      - image: mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04 
+        name: mssql
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: SA_PASSWORD
+          value: Veritis@123
+        ports:
+        - containerPort: 1433
+        volumeMounts:
+        - name: mssql
+          mountPath: /var/opt/mssql
+      volumes:
+      - name: mssql
+        persistentVolumeClaim:
+          claimName: mssql
